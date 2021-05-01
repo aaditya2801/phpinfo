@@ -1,0 +1,27 @@
+---
+# tasks file for phpinfo
+
+- name: installing packages
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - httpd
+  - php
+
+- name: starting services
+  service:
+    name: "httpd"
+    state: started
+
+- name: copying content
+  template:
+    src: "hello.php"
+    dest: "/var/www/html/hello.php"
+
+- name: enabling firewalld
+  ansible.posix.firewalld:
+    port: 80/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes
